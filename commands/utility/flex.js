@@ -17,8 +17,6 @@ module.exports = {
 
 		// set up the collector to stop on 5 thumbs up reacts
 		const collectionFilter = (reaction, user) => {
-			console.log(reaction.emoji.name)
-			console.log(user)
 			return reaction.emoji.name === '👍' && !user.bot;
 		}
 
@@ -26,7 +24,6 @@ module.exports = {
 		console.log(`Collector starting up...`);
 
 		collector.on('collect', (reaction, user) => {
-			// in case you want to do something when someone reacts with 👍
 			console.log(`Collect event: new ${reaction.emoji.name} reaction from ${user.tag}`);
 		});
 
@@ -34,7 +31,7 @@ module.exports = {
 			console.log(`Collector shutting down, reason: ${reason}`);
 			// reactions are no longer collected
 			// if the 👍 emoji is clicked the MAX_REACTIONS times
-			if (reason === 'limit') {
+			if (reason === 'userLimit') {
 				const thumbsReaction = collected.find(messageReaction => messageReaction.emoji.name === '👍');
 				const usersCollection = await thumbsReaction.users.fetch()
 				const notBotUsers = usersCollection.filter((u) => !u.bot)

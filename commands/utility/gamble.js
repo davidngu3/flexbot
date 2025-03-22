@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { runTheSimulation } = require('../roulette-runner');
+const { runTheSimulation } = require('./roulette-runner');
 
 module.exports = {
     data: new SlashCommandBuilder()
