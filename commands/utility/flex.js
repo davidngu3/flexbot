@@ -15,22 +15,23 @@ module.exports = {
 		sentMessage = response.resource.message;
 		await sentMessage.react('👍').then(() => sentMessage.react('👎'));
 
-		// collect reacts
+		// set up the collector to stop on 5 thumbs up reacts
 		const collectionFilter = (reaction, user) => {
 			console.log(reaction.emoji.name)
 			console.log(user)
 			return reaction.emoji.name === '👍' && !user.bot;
 		}
 
-		// set up the collector with the MAX_REACTIONS
-		const collector = sentMessage.createReactionCollector({ filter: collectionFilter, max: 5 });
+		const collector = sentMessage.createReactionCollector({ filter: collectionFilter, maxUsers: 5, dispose: true });
+		console.log(`Collector starting up...`);
 
 		collector.on('collect', (reaction, user) => {
 			// in case you want to do something when someone reacts with 👍
-			console.log(`Collected a new ${reaction.emoji.name} reaction from ${user.tag}`);
+			console.log(`Collect event: new ${reaction.emoji.name} reaction from ${user.tag}`);
 		});
 
 		collector.on('end', async (collected, reason) => {
+			console.log(`Collector shutting down, reason: ${reason}`);
 			// reactions are no longer collected
 			// if the 👍 emoji is clicked the MAX_REACTIONS times
 			if (reason === 'limit') {
@@ -38,6 +39,7 @@ module.exports = {
 				const usersCollection = await thumbsReaction.users.fetch()
 				const notBotUsers = usersCollection.filter((u) => !u.bot)
 				const usersArray = [...notBotUsers.values()];
+				console.log(`Flex limit reached: ${usersArray}`);
 				interaction.channel.send(`LOCKED IN: Flexing with ${usersArray}${timeSuggestion}!`)
 			}
 		})
