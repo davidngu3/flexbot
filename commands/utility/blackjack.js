@@ -74,7 +74,7 @@ module.exports = {
                     interaction.channel.send(`You lose! Dealer hit blackjack!`)
                 }
                 else {
-                    if (dealerHand.bestScore() > playerHand.bestScore()) {
+                    if (dealerHand.bestScore() >= playerHand.bestScore()) {
                         interaction.channel.send(`You lose! Dealer hit ${dealerHand.bestScore()} and you hit ${playerHand.bestScore()}`)
                     }
                     else {
